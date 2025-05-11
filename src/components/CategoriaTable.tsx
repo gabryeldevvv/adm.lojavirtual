@@ -55,7 +55,9 @@ export default function CategoriaTable() {
 
   console.log("Categorias:", categorias);
   console.table(categorias);
-  const rows = categorias;
+  const rows = [
+    { id: "CAT-2001", nome: "Verão", status: "Ativa" },
+  ];
 
 
   const [ordem, setOrder] = React.useState<Ordem>("desc");
