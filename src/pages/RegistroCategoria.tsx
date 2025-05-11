@@ -4,10 +4,24 @@ import { useForm } from "react-hook-form";
 
 import { HomeRounded, ChevronRightRounded } from "@mui/icons-material";
 
+import { useCreateCategoria } from "../hooks/useCategorias";
+
 export default function RegistroCategoria( ) {
-  const { register, handleSubmit, setValue } = useForm();
+    type CategoriaFormData = {
+      nome: string;
+      descricao?: string;
+    };
 
+    const { register, handleSubmit, reset } = useForm<CategoriaFormData>();
+    const createCategoriaMutation = useCreateCategoria();
 
+    const onSubmit = (data: CategoriaFormData) => {
+    createCategoriaMutation.mutate(data, {
+      onSuccess: () => {
+        reset(); // limpa o formulário após sucesso
+      },
+    });
+  };
 
 
   return (

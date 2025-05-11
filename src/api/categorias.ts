@@ -15,10 +15,13 @@ export const fetchCategorias = async () => {
   return response.data;
 };
 
-// export const createCategoria = async (categoria: { nome: string; }) => {
-//   const response = await axios.post(API_URL, categoria);
-//   return response.data;
-// };
+export const createCategoria = async (categoria: {
+  nome: string;
+  descricao?: string;
+}) => {
+  const response = await api.post("/categorias", categoria);
+  return response.data;
+};
 
 // export const updateCategoria = async (id: number, categoria: { nome: string }) => {
 //   const response = await axios.put(`${API_URL}/${id}`, categoria);

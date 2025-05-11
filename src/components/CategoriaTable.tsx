@@ -51,13 +51,12 @@ function RowMenu() {
 }
 
 export default function CategoriaTable() {
-  const { data: categorias } = useCategorias();
+  const { data: categorias = [], isLoading } = useCategorias();
 
   console.log("Categorias:", categorias);
   console.table(categorias);
-  const rows = [
-    { id: "CAT-2001", nome: "Verão", status: "Ativa" },
-  ];
+  console.log(typeof categorias);
+  const rows = categorias || []; 
 
 
   const [ordem, setOrder] = React.useState<Ordem>("desc");
@@ -67,12 +66,11 @@ export default function CategoriaTable() {
   const [currentPage, setCurrentPage] = React.useState(1);
   const rowsPerPage = 5;
 
-  const paginatedRows = rows.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
+  const paginatedRows = rows.length > 0 
+    ? rows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+  : [];
 
-  const totalPages = Math.ceil(rows.length / rowsPerPage);
+  const totalPages = Math.max(Math.ceil(rows.length / rowsPerPage), 1); 
 
   const getPagination = () => {
     const pages = [];
@@ -134,6 +132,9 @@ export default function CategoriaTable() {
     </React.Fragment>
   );
 
+    if (isLoading) {
+      return <Typography>Loading...</Typography>;
+    }
   return (
     <React.Fragment>
       <Sheet
