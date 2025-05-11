@@ -55,6 +55,9 @@ function RowMenu() {
 export default function CategoriaTable() {
   const { data: categorias } = useCategorias();
 
+  console.log("Categorias:", categorias);
+  console.table(categorias);
+
 
   const [ordem, setOrder] = React.useState<Ordem>("desc");
   const [selected, setSelected] = React.useState<readonly string[]>([]);
