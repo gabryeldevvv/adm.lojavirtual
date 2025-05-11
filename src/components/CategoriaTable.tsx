@@ -6,9 +6,7 @@ import { type ColorPaletteProp } from '@mui/joy/styles';
 
 import { useCategorias } from "../hooks/useCategorias";
 
-const rows = [
-  { id: "CAT-2001", nome: "Verão", status: "Ativa" },
-];
+
 
 type Ordem = "asc" | "desc";
 
@@ -57,6 +55,7 @@ export default function CategoriaTable() {
 
   console.log("Categorias:", categorias);
   console.table(categorias);
+  const rows = categorias;
 
 
   const [ordem, setOrder] = React.useState<Ordem>("desc");
