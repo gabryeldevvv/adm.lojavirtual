@@ -1,31 +1,120 @@
-import { Box, Button, Divider, FormControl, FormLabel, Input, Stack, Typography, Tabs, TabList, Tab, tabClasses, Breadcrumbs, Link, Card, CardActions, CardOverflow } from "@mui/joy";
-import { Link as RouterLink } from "react-router-dom";
+import {
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Typography,
+  Tabs,
+  TabList,
+  Tab,
+  tabClasses,
+  Breadcrumbs,
+  Link,
+  Card,
+  CardActions,
+  CardOverflow,
+  CircularProgress,
+} from "@mui/joy";
+import { Link as RouterLink, useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
 import { HomeRounded, ChevronRightRounded } from "@mui/icons-material";
+import {
+  useCategoriaById,
+  useCreateCategoria,
+  useUpdateCategoria,
+} from "../hooks/useCategorias";
+import SeletorRegistro from "../components/SeletorRegistro";
+import { useEffect } from "react";
 
-import { useCreateCategoria } from "../hooks/useCategorias";
-
-export default function RegistroCategoria( ) {
-    type CategoriaFormData = {
-      nome: string;
-      descricao?: string;
-    };
-
-    const { register, handleSubmit, reset } = useForm<CategoriaFormData>();
-    const createCategoriaMutation = useCreateCategoria();
-
-    const onSubmit = (data: CategoriaFormData) => {
-    createCategoriaMutation.mutate(data, {
-      onSuccess: () => {
-        reset(); // limpa o formulário após sucesso
-      },
-    });
+export default function RegistroCategoria() {
+  type CategoriaFormData = {
+    idPai: string | null,
+    nome: string;
+    descricao?: string;
   };
 
+  const { id } = useParams(); // Pegando o id da URL
+  const navigate = useNavigate();
+  const isEditando = !!id;
+
+  console.log("ID da URL:", id); // Log para verificar o ID
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue, 
+    formState: { errors },
+  } = useForm<CategoriaFormData>();
+
+  const { data, isLoading, isError } = useCategoriaById(id || "", isEditando); // Buscando o registro pelo id da URL
+
+  console.log("Dados da categoria:", data); // Log para verificar os dados carregados
+
+  const createCategoriaMutation = useCreateCategoria();
+  const updateCategoriaMutation = useUpdateCategoria();
+
+  useEffect(() => {
+    if (data) {
+      console.log("Resetando formulário com dados:", data); // Log para verificar os dados antes de resetar o formulário
+      reset({
+        nome: data.nome,
+        descricao: data.descricao || "",
+      });
+    }
+  }, [data, reset]);
+
+  const onSubmit = (formData: CategoriaFormData) => {
+    console.log("Dados enviados:", formData); // Log para verificar os dados antes de submeter
+    if (isEditando) {
+      console.log("Editando categoria com id:", id);
+      updateCategoriaMutation.mutate(
+        { id: id!, data: formData },
+        {
+          onSuccess: () => {
+            console.log("Categoria atualizada com sucesso!");
+            alert("Categoria atualizada com sucesso!");
+            navigate("/categorias");
+          },
+        }
+      );
+    } else {
+      console.log("Criando nova categoria");
+      createCategoriaMutation.mutate(formData, {
+        onSuccess: () => {
+          console.log("Categoria criada com sucesso!");
+          alert("Categoria criada com sucesso!");
+          reset();
+          navigate("/categorias");
+        },
+      });
+    }
+  };
+
+  // Caso esteja carregando ou ocorreu erro
+  if (isLoading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (isError) {
+    console.error("Erro ao carregar categoria."); // Log de erro
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
+        <Typography color="danger">Erro ao carregar a categoria.</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ flex: 1, width: "100%" }}>
+      {/* Topo com navegação */}
       <Box
         sx={{
           position: "sticky",
@@ -45,7 +134,7 @@ export default function RegistroCategoria( ) {
               underline="none"
               color="neutral"
               component={RouterLink}
-              to={'/'}
+              to="/"
               aria-label="Home"
             >
               <HomeRounded />
@@ -54,7 +143,7 @@ export default function RegistroCategoria( ) {
               underline="hover"
               color="neutral"
               component={RouterLink}
-              to={'/'}
+              to="/"
               sx={{ fontSize: 12, fontWeight: 500 }}
             >
               Catálogo
@@ -63,17 +152,17 @@ export default function RegistroCategoria( ) {
               underline="hover"
               color="neutral"
               component={RouterLink}
-              to={'/categorias'}
+              to="/categorias"
               sx={{ fontSize: 12, fontWeight: 500 }}
             >
               Categorias
             </Link>
             <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
-              Nome da categoria
+              {isEditando ? "Editar categoria" : "Nova categoria"}
             </Typography>
           </Breadcrumbs>
           <Typography level="h2" component="h1" sx={{ mt: 1, mb: 2 }}>
-            NOME DA CATEGORIA
+            {isEditando ? "Editar Categoria" : "Nova Categoria"}
           </Typography>
         </Box>
         <Tabs defaultValue={0} sx={{ bgcolor: "transparent" }}>
@@ -104,6 +193,8 @@ export default function RegistroCategoria( ) {
           </TabList>
         </Tabs>
       </Box>
+
+      {/* Formulário */}
       <Stack
         spacing={4}
         sx={{
@@ -114,7 +205,7 @@ export default function RegistroCategoria( ) {
           py: { xs: 2, md: 3 },
         }}
       >
-        <Card component='form' onSubmit={handleSubmit(onSubmit)}>
+        <Card component="form" onSubmit={handleSubmit(onSubmit)}>
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">Informações da categoria</Typography>
             <Typography level="body-sm">
@@ -122,76 +213,46 @@ export default function RegistroCategoria( ) {
             </Typography>
           </Box>
           <Divider />
-          <Stack
-            direction="row"
-            spacing={3}
-            sx={{ display: { xs: "none", md: "flex" }, my: 1 }}
-          >
-            <Stack spacing={2} sx={{ flexGrow: 1 }}>
-              <Stack spacing={1}>
-                <FormLabel>Nome da categoria</FormLabel>
-                <FormControl
-                  sx={{
-                    display: { sm: "flex-column", md: "flex-row" },
-                    gap: 2,
-                  }}
-                >
-                  <Input {...register("nome", { required: "Nome é obrigatório" })} size="sm" placeholder="Ex: Verão" />
-                </FormControl>
-              </Stack>
-            </Stack>
+
+          <Stack spacing={2} sx={{ my: 2 }}>
+            <FormControl>
+              <FormLabel>Nome da categoria</FormLabel>
+              <Input
+                {...register("nome", { required: "Nome é obrigatório" })}
+                placeholder="Ex: Verão"
+                error={!!errors.nome}
+              />
+              {errors.nome && (
+                <Typography level="body-xs" color="danger">
+                  {errors.nome.message}
+                </Typography>
+              )}
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>Descrição (opcional)</FormLabel>
+              <Input
+                {...register("descricao")}
+                placeholder="Descreva a categoria"
+              />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>Categoria Pai</FormLabel>
+              <SeletorRegistro onSelect={(idPai) => setValue('idPai', idPai)} />
+            </FormControl>
           </Stack>
-          <Stack
-            direction="column"
-            spacing={2}
-            sx={{ display: { xs: "flex", md: "none" }, my: 1 }}
+
+          <CardOverflow
+            sx={{ borderTop: "1px solid", borderColor: "divider" }}
           >
-            <Stack direction="row" spacing={2}>
-              <Stack spacing={1} sx={{ flexGrow: 1 }}>
-                <FormLabel>Nome do produto</FormLabel>
-                <FormControl
-                  sx={{
-                    display: {
-                      sm: "flex-column",
-                      md: "flex-row",
-                    },
-                    gap: 2,
-                  }}
-                >
-                  <Input size="sm" placeholder="Ex: Tênis" />
-                </FormControl>
-              </Stack>
-            </Stack>
-            {/* <div>
-              <CountrySelector />
-            </div> */}
-            {/* <div>
-              <FormControl sx={{ display: { sm: "contents" } }}>
-                <FormLabel>Timezone</FormLabel>
-                <Select
-                  size="sm"
-                  startDecorator={<AccessTimeFilledRoundedIcon />}
-                  defaultValue="1"
-                >
-                  <Option value="1">
-                    Indochina Time (Bangkok){" "}
-                    <Typography textColor="text.tertiary" sx={{ ml: 0.5 }}>
-                      — GMT+07:00
-                    </Typography>
-                  </Option>
-                  <Option value="2">
-                    Indochina Time (Ho Chi Minh City){" "}
-                    <Typography textColor="text.tertiary" sx={{ ml: 0.5 }}>
-                      — GMT+07:00
-                    </Typography>
-                  </Option>
-                </Select>
-              </FormControl>
-            </div> */}
-          </Stack>
-          <CardOverflow sx={{ borderTop: "1px solid", borderColor: "divider" }}>
-            <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
-              <Button size="sm" variant="outlined" color="neutral">
+            <CardActions sx={{ justifyContent: "flex-end", pt: 2 }}>
+              <Button
+                size="sm"
+                variant="outlined"
+                color="neutral"
+                onClick={() => reset()}
+              >
                 Cancelar
               </Button>
               <Button size="sm" variant="solid" type="submit">

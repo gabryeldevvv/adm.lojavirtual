@@ -1,11 +1,17 @@
 import { Box, Breadcrumbs, Link, Typography, Button } from "@mui/joy";
 
-import { DownloadRounded, HomeRounded, ChevronRightRounded } from "@mui/icons-material";
-import { Link as RouterLink } from "react-router-dom";
+import { Add, HomeRounded, ChevronRightRounded } from "@mui/icons-material";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import CategoriaTable from "../components/CategoriaTable";
 
 export default function PageCategoria() {
+  const navigate = useNavigate();
+
+  const handleCreateCategory = () => {
+    navigate('/categoria/');
+  };
+
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -54,10 +60,11 @@ export default function PageCategoria() {
         </Typography>
         <Button
           color="primary"
-          startDecorator={<DownloadRounded />}
+          startDecorator={<Add />}
           size="sm"
+          onClick={handleCreateCategory}
         >
-          Download PDF
+          Criar categoria
         </Button>
       </Box>
       <CategoriaTable />

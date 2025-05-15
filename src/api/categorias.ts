@@ -6,7 +6,7 @@ const auth = {
 };
 
 const api = axios.create({
-  baseURL: "https://webservice-pw0xla.fly.dev/api", 
+  baseURL: "https://webservice-pw0xla.fly.dev/api",
   auth,
 });
 
@@ -18,16 +18,21 @@ export const fetchCategorias = async () => {
 export const createCategoria = async (categoria: {
   nome: string;
   descricao?: string;
+  idPai?: string | null;
 }) => {
   const response = await api.post("/categorias", categoria);
   return response.data;
 };
 
-// export const updateCategoria = async (id: number, categoria: { nome: string }) => {
-//   const response = await axios.put(`${API_URL}/${id}`, categoria);
-//   return response.data;
-// };
+export const updateCategoria = async (
+  id: string,
+  categoria: { nome: string; descricao?: string }
+) => {
+  const response = await api.put(`/categorias/${id}`, categoria);
+  return response.data;
+};
 
-// export const deleteCategoria = async (id: number) => {
-//   await axios.delete(`${API_URL}/${id}`);
-// };
+export const fetchCategoriaById = async (id: string) => {
+  const response = await api.get(`/categorias/${id}`);
+  return response.data;
+};

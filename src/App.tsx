@@ -50,6 +50,8 @@ export default function App() {
                 <Route path="/marcas" element={<PageMarca />} />
                 <Route path="/categorias" element={<PageCategoria />} />
 
+                <Route path="/categoria/" element={<RegistroCategoria />} />
+
                 {/* Rota dinâmica */}
                 <Route path="/produto/:id" element={<RegistroProduto />} />
                 <Route path="/categoria/:id" element={<RegistroCategoria />} />

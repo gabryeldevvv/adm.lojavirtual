@@ -50,6 +50,30 @@ function RowMenu() {
   );
 }
 
+
+type Status = "Paid" | "Refunded" | "Cancelled";
+
+interface CategoriaRow {
+  id: string; 
+  nome: string;
+  status: Status;
+}
+
+const statusDecorators: Record<Status, React.ReactNode> = {
+Paid: <CheckRounded />,
+Refunded: <AutorenewRounded />,
+Cancelled: <Block />
+};
+
+const statusColors: Record<Status, ColorPaletteProp> = {
+Paid: "success",
+Refunded: "neutral",
+Cancelled: "danger"
+};
+
+
+
+
 export default function CategoriaTable() {
   const { data: categorias = [], isLoading } = useCategorias();
 
@@ -234,7 +258,7 @@ export default function CategoriaTable() {
                   onChange={(event) => {
                     setSelected(
                       event.target.checked
-                        ? paginatedRows.map((row) => row.id)
+                        ? paginatedRows.map((row: CategoriaRow) => row.id)
                         : []
                     );
                   }}
@@ -295,7 +319,7 @@ export default function CategoriaTable() {
                   />
                 </td>
                 <td>
-                  <Link level="body-xs" component={RouterLink} to={`/categoria/${row.id}`}  color="neutral" >
+                  <Link level="body-xs" component={RouterLink} to={`/categoria/${row.id}`}  color="neutral" state={{ categoria: row }}>
                     <Typography level="body-xs" >{row.id}</Typography>
                   </Link>
                 </td>
@@ -306,23 +330,12 @@ export default function CategoriaTable() {
                   <Chip
                     variant="soft"
                     size="sm"
-                    startDecorator={
-                      {
-                        Paid: <CheckRounded />,
-                        Refunded: <AutorenewRounded />,
-                        Cancelled: <Block />,
-                      }[row.status]
-                    }
-                    color={
-                      {
-                        Paid: "success",
-                        Refunded: "neutral",
-                        Cancelled: "danger",
-                      }[row.status] as ColorPaletteProp
-                    }
+                    startDecorator={statusDecorators[row.status as Status]}
+                    color={statusColors[row.status as Status]}
                   >
                     {row.status}
                   </Chip>
+
                 </td>
                 <td>
                   <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
