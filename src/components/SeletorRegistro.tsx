@@ -4,46 +4,66 @@ import AutocompleteOption from "@mui/joy/AutocompleteOption";
 import FormControl, { type FormControlProps } from "@mui/joy/FormControl";
 import axios from "axios";
 
-interface CategoriaType {
+interface ItemBasico {
   id: string;
   nome: string;
 }
 
-type SeletorRegistroProps = {
-  onSelect: (categoriaId: string | null) => void;
-  defaultValue?: CategoriaType | null;
+type SeletorRegistroProps<T extends ItemBasico> = {
+  objeto: string;
+  onSelect: (item: T | null) => void;
+  value?: T | null;
 } & Omit<FormControlProps, "onSelect">;
 
-export default function SeletorRegistro({
+export default function SeletorRegistro<T extends ItemBasico>({
+  objeto,
   onSelect,
-  defaultValue,
+  value,
   sx,
   ...other
-}: SeletorRegistroProps) {
-  const [options, setOptions] = useState<CategoriaType[]>([]);
+}: SeletorRegistroProps<T>) {
+  const [options, setOptions] = useState<T[]>([]);
   const [inputValue, setInputValue] = useState("");
-  const [value, setValue] = useState<CategoriaType | null>(defaultValue ?? null);
   const [loading, setLoading] = useState(false);
+  const [internalValue, setInternalValue] = useState<T | null>(null);
+
+  // Sincroniza o valor interno quando a prop value muda
+  useEffect(() => {
+    setInternalValue(value || null);
+  }, [value]);
 
   useEffect(() => {
-    if (!inputValue) return;
+    const fetchData = async () => {
+      if (!inputValue) {
+        setOptions([]);
+        return;
+      }
 
-    const delayDebounce = setTimeout(() => {
       setLoading(true);
-      axios
-        .get(
-          `https://webservice-pw0xla.fly.dev/api/categorias?search=${inputValue}`,
+      try {
+        const response = await axios.get(
+          `https://webservice-pw0xla.fly.dev/api/${objeto}?search=${inputValue}`,
           {
             auth: { username: "admin", password: "admin123" },
           }
-        )
-        .then((res) => setOptions(res.data))
-        .catch((err) => console.error("Erro ao buscar categorias:", err))
-        .finally(() => setLoading(false));
-    }, 300);
+        );
+        setOptions(response.data);
+      } catch (err) {
+        console.error("Erro ao buscar registros:", err);
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    const delayDebounce = setTimeout(fetchData, 300);
     return () => clearTimeout(delayDebounce);
-  }, [inputValue]);
+  }, [inputValue, objeto]);
+
+  const handleChange = (_: any, newValue: T | null) => {
+    setInternalValue(newValue);
+    onSelect(newValue);
+  };
 
   return (
     <FormControl
@@ -55,14 +75,14 @@ export default function SeletorRegistro({
         autoHighlight
         loading={loading}
         options={options}
-        value={value}
-        onChange={(_, newValue) => {
-          setValue(newValue);
-          onSelect(newValue ? newValue.id : null);
+        value={internalValue}
+        inputValue={inputValue}
+        onChange={handleChange}
+        onInputChange={(_, newInputValue) => {
+          setInputValue(newInputValue);
         }}
         getOptionLabel={(option) => option.nome}
-        isOptionEqualToValue={(option, value) => option.id === value.id}
-        onInputChange={(_, value) => setInputValue(value)}
+        isOptionEqualToValue={(option, value) => option.id === value?.id}
         renderOption={(optionProps, option) => (
           <AutocompleteOption {...optionProps}>{option.nome}</AutocompleteOption>
         )}
@@ -71,6 +91,7 @@ export default function SeletorRegistro({
             autoComplete: "new-password",
           },
         }}
+        filterOptions={(options) => options}
       />
     </FormControl>
   );

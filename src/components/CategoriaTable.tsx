@@ -6,8 +6,6 @@ import { type ColorPaletteProp } from '@mui/joy/styles';
 
 import { useCategorias } from "../hooks/useCategorias";
 
-
-
 type Ordem = "asc" | "desc";
 
 function getComparator<Key extends string>(
@@ -50,7 +48,6 @@ function RowMenu() {
   );
 }
 
-
 type Status = "Paid" | "Refunded" | "Cancelled";
 
 interface CategoriaRow {
@@ -71,9 +68,6 @@ Refunded: "neutral",
 Cancelled: "danger"
 };
 
-
-
-
 export default function CategoriaTable() {
   const { data: categorias = [], isLoading } = useCategorias();
 
@@ -82,8 +76,7 @@ export default function CategoriaTable() {
   console.log(typeof categorias);
   const rows = categorias || []; 
 
-
-  const [ordem, setOrder] = React.useState<Ordem>("desc");
+  const [ordem, setOrdem] = React.useState<Ordem>("desc");
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState(false);
 
@@ -156,9 +149,9 @@ export default function CategoriaTable() {
     </React.Fragment>
   );
 
-    if (isLoading) {
-      return <Typography>Loading...</Typography>;
-    }
+  if (isLoading) {
+    return <Typography>Loading...</Typography>;
+  }
   return (
     <React.Fragment>
       <Sheet
@@ -275,7 +268,7 @@ export default function CategoriaTable() {
                   underline="none"
                   color="primary"
                   component="button"
-                  onClick={() => setOrder(ordem === "asc" ? "desc" : "asc")}
+                  onClick={() => setOrdem(ordem === "asc" ? "desc" : "asc")}
                   endDecorator={<ArrowDropDown />}
                   sx={[
                     {

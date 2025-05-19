@@ -1,35 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-import GlobalStyles from "@mui/joy/GlobalStyles";
-import Avatar from "@mui/joy/Avatar";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import Card from "@mui/joy/Card";
-import Chip from "@mui/joy/Chip";
-import Divider from "@mui/joy/Divider";
-import IconButton from "@mui/joy/IconButton";
-import Input from "@mui/joy/Input";
-import LinearProgress from "@mui/joy/LinearProgress";
-import List from "@mui/joy/List";
-import ListItem from "@mui/joy/ListItem";
-import ListItemButton, { listItemButtonClasses } from "@mui/joy/ListItemButton";
-import ListItemContent from "@mui/joy/ListItemContent";
-import Typography from "@mui/joy/Typography";
-import Sheet from "@mui/joy/Sheet";
-import Stack from "@mui/joy/Stack";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
-import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
-import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
-import QuestionAnswerRoundedIcon from "@mui/icons-material/QuestionAnswerRounded";
-import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
-import SupportRoundedIcon from "@mui/icons-material/SupportRounded";
-import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
-import BrightnessAutoRoundedIcon from "@mui/icons-material/BrightnessAutoRounded";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { GlobalStyles, Avatar, Box, Button, Card, Divider, IconButton, Input, LinearProgress, List, ListItem, ListItemButton, listItemButtonClasses, ListItemContent, Typography, Sheet, Stack,      } from "@mui/joy";
+import { SearchRounded, HomeRounded, AssignmentRounded, SupportRounded, SettingsRounded, CloseRounded, LogoutRounded, BrightnessAutoRounded, KeyboardArrowDown  } from "@mui/icons-material";
 
 import ColorSchemeToggle from "./ColorSchemeToggle";
 import { closeSidebar } from "../../utils";
@@ -123,14 +95,14 @@ export default function Sidebar() {
       />
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
         <IconButton variant="soft" color="primary" size="sm">
-          <BrightnessAutoRoundedIcon />
+          <BrightnessAutoRounded />
         </IconButton>
         <Typography level="title-lg">Shoes Imports</Typography>
         <ColorSchemeToggle sx={{ ml: "auto" }} />
       </Box>
       <Input
         size="sm"
-        startDecorator={<SearchRoundedIcon />}
+        startDecorator={<SearchRounded />}
         placeholder="Buscar"
       />
       <Box
@@ -155,7 +127,7 @@ export default function Sidebar() {
         >
           <ListItem>
             <ListItemButton>
-              <HomeRoundedIcon />
+              <HomeRounded />
               <ListItemContent>
                 <Typography level="title-sm">Inicio</Typography>
               </ListItemContent>
@@ -191,11 +163,11 @@ export default function Sidebar() {
             <Toggler
               renderToggle={({ open, setOpen }) => (
                 <ListItemButton onClick={() => setOpen(!open)}>
-                  <AssignmentRoundedIcon />
+                  <AssignmentRounded />
                   <ListItemContent>
                     <Typography level="title-sm">Atendimento</Typography>
                   </ListItemContent>
-                  <KeyboardArrowDownIcon
+                  <KeyboardArrowDown
                     sx={[
                       open
                         ? {
@@ -225,7 +197,7 @@ export default function Sidebar() {
                   <ListItemContent>
                     <Typography level="title-sm">Pedidos</Typography>
                   </ListItemContent>
-                  <KeyboardArrowDownIcon
+                  <KeyboardArrowDown
                     sx={[
                       open
                         ? {
@@ -263,11 +235,11 @@ export default function Sidebar() {
             <Toggler
               renderToggle={({ open, setOpen }) => (
                 <ListItemButton onClick={() => setOpen(!open)}>
-                  <AssignmentRoundedIcon />
+                  <AssignmentRounded />
                   <ListItemContent>
                     <Typography level="title-sm">Catálogo</Typography>
                   </ListItemContent>
-                  <KeyboardArrowDownIcon
+                  <KeyboardArrowDown
                     sx={[
                       open
                         ? {
@@ -288,6 +260,11 @@ export default function Sidebar() {
                   </ListItemButton>
                 </ListItem>
                 <ListItem>
+                  <ListItemButton component={Link} to="/variacoes">
+                    Variações de produtos
+                  </ListItemButton>
+                </ListItem>
+                <ListItem>
                   <ListItemButton component={Link} to="/marcas">
                     Marcas
                   </ListItemButton>
@@ -295,6 +272,26 @@ export default function Sidebar() {
                 <ListItem>
                   <ListItemButton component={Link} to="/categorias">
                     Categorias
+                  </ListItemButton>
+                </ListItem>
+                <ListItem>
+                  <ListItemButton component={Link} to="/cores">
+                    Cores
+                  </ListItemButton>
+                </ListItem>
+                <ListItem>
+                  <ListItemButton component={Link} to="/tamanhos">
+                    Tamanhos
+                  </ListItemButton>
+                </ListItem>
+                <ListItem>
+                  <ListItemButton component={Link} to="/tamanhos">
+                    Estoque
+                  </ListItemButton>
+                </ListItem>
+                <ListItem>
+                  <ListItemButton component={Link} to="/clientes">
+                    Clientes
                   </ListItemButton>
                 </ListItem>
               </List>
@@ -309,7 +306,7 @@ export default function Sidebar() {
                   <ListItemContent>
                     <Typography level="title-sm">Usuários</Typography>
                   </ListItemContent>
-                  <KeyboardArrowDownIcon
+                  <KeyboardArrowDown
                     sx={[
                       open
                         ? {
@@ -355,13 +352,13 @@ export default function Sidebar() {
         >
           <ListItem>
             <ListItemButton>
-              <SupportRoundedIcon />
+              <SupportRounded />
               Ajuda
             </ListItemButton>
           </ListItem>
           <ListItem>
             <ListItemButton>
-              <SettingsRoundedIcon />
+              <SettingsRounded />
               Configurações
             </ListItemButton>
           </ListItem>
@@ -379,7 +376,7 @@ export default function Sidebar() {
           >
             <Typography level="title-sm">Used space</Typography>
             <IconButton size="sm">
-              <CloseRoundedIcon />
+              <CloseRounded />
             </IconButton>
           </Stack>
           <Typography level="body-xs">
@@ -408,7 +405,7 @@ export default function Sidebar() {
           <Typography level="body-xs">usuario@test.com</Typography>
         </Box>
         <IconButton size="sm" variant="plain" color="neutral">
-          <LogoutRoundedIcon />
+          <LogoutRounded />
         </IconButton>
       </Box>
     </Sheet>

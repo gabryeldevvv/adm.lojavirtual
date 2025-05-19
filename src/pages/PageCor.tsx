@@ -1,16 +1,14 @@
 import { Box, Breadcrumbs, Link, Typography, Button } from "@mui/joy";
 
 import { Add, HomeRounded, ChevronRightRounded } from "@mui/icons-material";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom"; 
+import CorTable from "../components/CorTable";
 
-import OrderTable from "../components/OrderTable";
-import OrderList from "../components/OrderList";
-
-export default function PageProduto() {
+export default function PageCor() {
   const navigate = useNavigate();
 
-  const handleCreateProduct = () => {
-    navigate('/produto/');
+  const handleCreateCor = () => {
+    navigate('/cor/');
   };
 
   return (
@@ -23,14 +21,14 @@ export default function PageProduto() {
           sx={{ pl: 0 }}
         >
           <Link
-            underline="none"
-            color="neutral"
-            component={RouterLink}
-            to={'/'}
-            aria-label="Home"
-          >
-            <HomeRounded />
-          </Link>
+              underline="none"
+              color="neutral"
+              component={RouterLink}
+              to={'/'}
+              aria-label="Home"
+            >
+              <HomeRounded />
+            </Link>
           <Link
             underline="hover"
             color="neutral"
@@ -41,7 +39,7 @@ export default function PageProduto() {
             Catálogo
           </Link>
           <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
-            Produtos
+            Cores
           </Typography>
         </Breadcrumbs>
       </Box>
@@ -57,19 +55,18 @@ export default function PageProduto() {
         }}
       >
         <Typography level="h2" component="h1">
-          Produtos
+          Cores
         </Typography>
         <Button
           color="primary"
           startDecorator={<Add />}
           size="sm"
-          onClick={handleCreateProduct}
+          onClick={handleCreateCor}
         >
-          Criar produto
+          Criar cor
         </Button>
       </Box>
-      <OrderTable />
-      <OrderList />
+      <CorTable />
     </>
   );
 }

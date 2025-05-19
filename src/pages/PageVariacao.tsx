@@ -3,14 +3,13 @@ import { Box, Breadcrumbs, Link, Typography, Button } from "@mui/joy";
 import { Add, HomeRounded, ChevronRightRounded } from "@mui/icons-material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
-import OrderTable from "../components/OrderTable";
-import OrderList from "../components/OrderList";
+import VariacaoTable from "../components/VariacaoTable";
 
-export default function PageProduto() {
+export default function PageVariacao() {
   const navigate = useNavigate();
 
-  const handleCreateProduct = () => {
-    navigate('/produto/');
+  const handleCreateClient = () => {
+    navigate('/variacao/');
   };
 
   return (
@@ -23,14 +22,14 @@ export default function PageProduto() {
           sx={{ pl: 0 }}
         >
           <Link
-            underline="none"
-            color="neutral"
-            component={RouterLink}
-            to={'/'}
-            aria-label="Home"
-          >
-            <HomeRounded />
-          </Link>
+              underline="none"
+              color="neutral"
+              component={RouterLink}
+              to={'/'}
+              aria-label="Home"
+            >
+              <HomeRounded />
+            </Link>
           <Link
             underline="hover"
             color="neutral"
@@ -41,7 +40,7 @@ export default function PageProduto() {
             Catálogo
           </Link>
           <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
-            Produtos
+            Variações
           </Typography>
         </Breadcrumbs>
       </Box>
@@ -57,19 +56,18 @@ export default function PageProduto() {
         }}
       >
         <Typography level="h2" component="h1">
-          Produtos
+          Variacao
         </Typography>
         <Button
           color="primary"
           startDecorator={<Add />}
           size="sm"
-          onClick={handleCreateProduct}
+          onClick={handleCreateClient}
         >
-          Criar produto
+          Criar variacao
         </Button>
       </Box>
-      <OrderTable />
-      <OrderList />
+      <VariacaoTable />
     </>
   );
 }

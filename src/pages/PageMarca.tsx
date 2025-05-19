@@ -1,40 +1,40 @@
-import React from "react";
-import Box from "@mui/joy/Box";
-import CssBaseline from "@mui/joy/CssBaseline";
+import { Box, Breadcrumbs, Link, Typography, Button } from "@mui/joy";
 
-import Breadcrumbs from "@mui/joy/Breadcrumbs";
-import Link from "@mui/joy/Link";
-import Typography from "@mui/joy/Typography";
-import Button from "@mui/joy/Button";
-import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import { Add, HomeRounded, ChevronRightRounded } from "@mui/icons-material";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
-import OrderTable from "../components/OrderTable";
 import MarcaTable from "../components/MarcaTable";
 
 export default function PageMarca() {
+  const navigate = useNavigate();
+  
+  const handleCreateBrand = () => {
+    navigate('/marca/');
+  };
+
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Breadcrumbs
           size="sm"
           aria-label="breadcrumbs"
-          separator={<ChevronRightRoundedIcon fontSize="sm" />}
+          separator={<ChevronRightRounded fontSize="sm" />}
           sx={{ pl: 0 }}
         >
           <Link
             underline="none"
             color="neutral"
-            href="#some-link"
+            component={RouterLink}
+            to={'/'}
             aria-label="Home"
           >
-            <HomeRoundedIcon />
+            <HomeRounded />
           </Link>
           <Link
             underline="hover"
             color="neutral"
-            href="#some-link"
+            component={RouterLink}
+            to={'/'}
             sx={{ fontSize: 12, fontWeight: 500 }}
           >
             Catálogo
@@ -60,10 +60,11 @@ export default function PageMarca() {
         </Typography>
         <Button
           color="primary"
-          startDecorator={<DownloadRoundedIcon />}
+          startDecorator={<Add />}
           size="sm"
+          onClick={handleCreateBrand}
         >
-          Download PDF
+          Criar marca
         </Button>
       </Box>
       <MarcaTable />

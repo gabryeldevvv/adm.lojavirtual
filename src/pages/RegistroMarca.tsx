@@ -22,24 +22,17 @@ import { Link as RouterLink, useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { HomeRounded, ChevronRightRounded } from "@mui/icons-material";
 import {
-  useProdutoById,
-  useCreateProduto,
-  useUpdateProduto,
-} from "../hooks/useProdutos";
+  useMarcaById,
+  useCreateMarca,
+  useUpdateMarca,
+} from "../hooks/useMarcas";
 import { useEffect } from "react";
-import SeletorRegistro from "../components/SeletorRegistro";
 
-export default function MyProfile() {
-
-type ProdutoFormData = {
-  id: string;
-  nome: string;
-  descricao?: string;
-  sku: string;
-  preco: number;
-  categoria: { id: string; nome: string } | null;
-  marca: { id: string; nome: string } | null;
-};
+export default function RegistroMarca() {
+  type MarcaFormData = {
+    nome: string;
+    descricao?: string;
+  };
 
   const { id } = useParams(); // Pegando o id da URL
   const navigate = useNavigate();
@@ -51,70 +44,52 @@ type ProdutoFormData = {
     register,
     handleSubmit,
     reset, 
-    setValue, 
-    watch,
     formState: { errors },
-  } = useForm<ProdutoFormData>({
-    defaultValues: {
-      nome: '',
-      categoria: null,
-      marca: null,
-    },
-  });
+  } = useForm<MarcaFormData>();
 
+  const { data, isLoading, isError } = useMarcaById(id || "", isEditando); // Buscando o registro pelo id da URL
 
-  const { data, isLoading, isError } = useProdutoById(id || "", isEditando); // Buscando o registro pelo id da URL
+  console.log("Dados da marca:", data); // Log para verificar os dados carregados
 
-  console.log("Dados da produto:", data); // Log para verificar os dados carregados
-
-  const createProdutoMutation = useCreateProduto();
-  const updateProdutoMutation = useUpdateProduto();
+  const createMarcaMutation = useCreateMarca();
+  const updateMarcaMutation = useUpdateMarca();
 
   useEffect(() => {
     if (data) {
+      console.log("Resetando formulário com dados:", data); // Log para verificar os dados antes de resetar o formulário
       reset({
-        ...data,
-        categoria: data.categoria || null,
-        marca: data.marca || null
+        nome: data.nome,
+        descricao: data.descricao || "",
       });
     }
   }, [data, reset]);
 
-  const onSubmit = (formData: ProdutoFormData) => {
-    const payload = {
-      nome: formData.nome,
-      descricao: formData.descricao,
-      preco: formData.preco,  // pode ser número ou string, conforme seu tipo
-      sku: formData.sku,
-      categoria: formData.categoria?.id ? { id: formData.categoria.id } : null,
-      marca: formData.marca?.id ? { id: formData.marca.id } : null
-    };
-
-    console.log("Payload sendo enviado:", payload);
-
+  const onSubmit = (formData: MarcaFormData) => {
+    console.log("Dados enviados:", formData); // Log para verificar os dados antes de submeter
     if (isEditando) {
-      updateProdutoMutation.mutate(
-        { id: id!, data: payload },
+      console.log("Editando marca com id:", id);
+      updateMarcaMutation.mutate(
+        { id: id!, data: formData },
         {
           onSuccess: () => {
-            alert("Produto atualizado com sucesso!");
-            navigate("/produtos");
+            console.log("Marca atualizada com sucesso!");
+            alert("Marca atualizada com sucesso!");
+            navigate("/marcas");
           },
         }
       );
     } else {
-      createProdutoMutation.mutate(payload, {
+      console.log("Criando nova marca");
+      createMarcaMutation.mutate(formData, {
         onSuccess: () => {
-          alert("Produto criado com sucesso!");
+          console.log("Marca criada com sucesso!");
+          alert("Marca criada com sucesso!");
           reset();
-          navigate("/produtos");
+          navigate("/marcas");
         },
       });
     }
   };
-
-
-
 
   // Caso esteja carregando ou ocorreu erro
   if (isLoading) {
@@ -126,16 +101,17 @@ type ProdutoFormData = {
   }
 
   if (isError) {
-    console.error("Erro ao carregar produto."); // Log de erro
+    console.error("Erro ao carregar marca."); // Log de erro
     return (
       <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
-        <Typography color="danger">Erro ao carregar a produto.</Typography>
+        <Typography color="danger">Erro ao carregar a marca.</Typography>
       </Box>
     );
   }
 
   return (
     <Box sx={{ flex: 1, width: "100%" }}>
+      {/* Topo com navegação */}
       <Box
         sx={{
           position: "sticky",
@@ -173,17 +149,17 @@ type ProdutoFormData = {
               underline="hover"
               color="neutral"
               component={RouterLink}
-              to="/produtos"
+              to="/marcas"
               sx={{ fontSize: 12, fontWeight: 500 }}
             >
-              Produtos
+              Marcas
             </Link>
             <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
-              {isEditando ? "Editar produto" : "Novo produto"}
+              {isEditando ? "Editar marca" : "Nova marca"}
             </Typography>
           </Breadcrumbs>
           <Typography level="h2" component="h1" sx={{ mt: 1, mb: 2 }}>
-            {isEditando ? "Editar Produto" : "Novo Produto"}
+            {isEditando ? "Editar Marca" : "Nova Marca"}
           </Typography>
         </Box>
         <Tabs defaultValue={0} sx={{ bgcolor: "transparent" }}>
@@ -214,6 +190,8 @@ type ProdutoFormData = {
           </TabList>
         </Tabs>
       </Box>
+
+      {/* Formulário */}
       <Stack
         spacing={4}
         sx={{
@@ -226,29 +204,16 @@ type ProdutoFormData = {
       >
         <Card component="form" onSubmit={handleSubmit(onSubmit)}>
           <Box sx={{ mb: 1 }}>
-            <Typography level="title-md">Informações do produto</Typography>
+            <Typography level="title-md">Informações da marca</Typography>
             <Typography level="body-sm">
-              Customize a apresentação do produto para venda.
+              Customize a apresentação da marca para venda.
             </Typography>
           </Box>
           <Divider />
 
           <Stack spacing={2} sx={{ my: 2 }}>
             <FormControl>
-              <FormLabel>SKU</FormLabel>
-              <Input
-                {...register("sku", { required: "SKU é obrigatório" })}
-                placeholder="Ex: SKU12345"
-                error={!!errors.sku}
-              />
-              {errors.sku && (
-                <Typography level="body-xs" color="danger">
-                  {errors.sku.message}
-                </Typography>
-              )}
-            </FormControl>
-            <FormControl>
-              <FormLabel>Nome do produto</FormLabel>
+              <FormLabel>Nome da marca</FormLabel>
               <Input
                 {...register("nome", { required: "Nome é obrigatório" })}
                 placeholder="Ex: Verão"
@@ -265,45 +230,8 @@ type ProdutoFormData = {
               <FormLabel>Descrição (opcional)</FormLabel>
               <Input
                 {...register("descricao")}
-                placeholder="Descreva o produto"
+                placeholder="Descreva a marca"
               />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel>Categoria</FormLabel>
-              <SeletorRegistro<{id: string; nome: string}>
-                value={watch("categoria")}
-                onSelect={(produto) => {
-                  setValue("categoria", produto);
-                }}
-                objeto="categorias"
-              />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel>Marca</FormLabel>
-              <SeletorRegistro<{id: string; nome: string}>
-                value={watch("marca")}
-                onSelect={(produto) => {
-                  setValue("marca", produto);
-                }}
-                objeto="marcas"
-              />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel>Preço</FormLabel>
-              <Input
-                type="number"
-                {...register("preco", { required: "Preço é obrigatório" })}
-                placeholder="Ex: 499.90"
-                error={!!errors.preco}
-              />
-              {errors.preco && (
-                <Typography level="body-xs" color="danger">
-                  {errors.preco.message}
-                </Typography>
-              )}
             </FormControl>
           </Stack>
 

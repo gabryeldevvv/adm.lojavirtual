@@ -4,7 +4,7 @@ import { Box, Button, Chip, Divider, FormControl, FormLabel, Link, Input, Modal,
 import { FilterAlt, Search,  ArrowDropDown,  CheckRounded,  Block,  AutorenewRounded,  KeyboardArrowRight,  KeyboardArrowLeft,  MoreHorizRounded } from "@mui/icons-material";
 import { type ColorPaletteProp } from '@mui/joy/styles';
 
-import { useMarcas } from "../hooks/useMarcas";
+import { useVariacoes } from "../hooks/useVariacoes";
 
 type Ordem = "asc" | "desc";
 
@@ -20,11 +20,11 @@ function getComparator<Key extends string>(
     : (a, b) => -descendingComparator(a, b, ordenarPor);
 }
 
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
+function descendingComparator<T>(a: T, b: T, ordenarPor: keyof T) {
+  if (b[ordenarPor] < a[ordenarPor]) {
     return -1;
   }
-  if (b[orderBy] > a[orderBy]) {
+  if (b[ordenarPor] > a[ordenarPor]) {
     return 1;
   }
   return 0;
@@ -50,7 +50,7 @@ function RowMenu() {
 
 type Status = "Paid" | "Refunded" | "Cancelled";
 
-interface MarcaRow {
+interface VariacaoRow {
   id: string; 
   nome: string;
   status: Status;
@@ -68,26 +68,26 @@ Refunded: "neutral",
 Cancelled: "danger"
 };
 
-export default function MarcaTable() {
-  const { data: marcas = [], isLoading } = useMarcas();
-
-  console.log("marcas:", marcas);
-  console.table(marcas);
-  console.log(typeof marcas);
-  const rows = marcas || []; 
-
-  const [ordem, setOrdem] = React.useState<Ordem>("desc");
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
-  const [open, setOpen] = React.useState(false);
-
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const rowsPerPage = 5;
-
-  const paginatedRows = rows.length > 0 
-    ? rows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
-  : [];
-
-  const totalPages = Math.max(Math.ceil(rows.length / rowsPerPage), 1); 
+export default function VariacaoTable() {
+  const { data: variacao = [], isLoading } = useVariacoes();
+  
+    console.log("Variacao:", variacao);
+    console.table(variacao);
+    console.log(typeof variacao);
+    const rows = variacao || []; 
+  
+    const [ordem, setOrdem] = React.useState<Ordem>("desc");
+    const [selected, setSelected] = React.useState<readonly string[]>([]);
+    const [open, setOpen] = React.useState(false);
+  
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const rowsPerPage = 5;
+  
+    const paginatedRows = rows.length > 0 
+      ? rows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+    : [];
+  
+    const totalPages = Math.max(Math.ceil(rows.length / rowsPerPage), 1); 
 
   const getPagination = () => {
     const pages = [];
@@ -212,7 +212,7 @@ export default function MarcaTable() {
         {renderFilters()}
       </Box>
       <Sheet
-        className="MarcaTableContainer"
+        className="VariacaoTableContainer"
         variant="outlined"
         sx={{
           display: { xs: "none", sm: "initial" },
@@ -251,7 +251,7 @@ export default function MarcaTable() {
                   onChange={(event) => {
                     setSelected(
                       event.target.checked
-                        ? paginatedRows.map((row: MarcaRow) => row.id)
+                        ? paginatedRows.map((row: VariacaoRow) => row.id)
                         : []
                     );
                   }}
@@ -284,11 +284,10 @@ export default function MarcaTable() {
                       : { "& svg": { transform: "rotate(180deg)" } },
                   ]}
                 >
-                  Identificador
+                  Id
                 </Link>
               </th>
               <th style={{ width: 140, padding: "12px 6px" }}>Nome</th>
-              <th style={{ width: 140, padding: "12px 6px" }}>Status</th>
               <th style={{ width: 140, padding: "12px 6px" }}> </th>
             </tr>
           </thead>
@@ -312,22 +311,12 @@ export default function MarcaTable() {
                   />
                 </td>
                 <td>
-                  <Link level="body-xs" component={RouterLink} to={`/marca/${row.id}`}  color="neutral" state={{ marca: row }}>
-                    <Typography level="body-xs">{row.id}</Typography>
+                  <Link level="body-xs" component={RouterLink} to={`/variacao/${row.id}`}  color="neutral" >
+                    <Typography level="body-xs" >{row.id}</Typography>
                   </Link>
                 </td>
                 <td>
                   <Typography level="body-xs">{row.nome}</Typography>
-                </td>
-                <td>
-                  <Chip
-                    variant="soft"
-                    size="sm"
-                    startDecorator={statusDecorators[row.status as Status]}
-                    color={statusColors[row.status as Status]}
-                  >
-                    {row.status}
-                  </Chip>
                 </td>
                 <td>
                   <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>

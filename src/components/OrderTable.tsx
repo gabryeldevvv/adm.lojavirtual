@@ -1,279 +1,30 @@
 import * as React from "react";
-import Avatar from "@mui/joy/Avatar";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import Chip from "@mui/joy/Chip";
-import Divider from "@mui/joy/Divider";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import Link from "@mui/joy/Link";
 import { Link as RouterLink } from "react-router-dom";
-import Input from "@mui/joy/Input";
-import Modal from "@mui/joy/Modal";
-import ModalDialog from "@mui/joy/ModalDialog";
-import ModalClose from "@mui/joy/ModalClose";
-import Select from "@mui/joy/Select";
-import Option from "@mui/joy/Option";
-import Table from "@mui/joy/Table";
-import Sheet from "@mui/joy/Sheet";
-import Checkbox from "@mui/joy/Checkbox";
-import IconButton, { iconButtonClasses } from "@mui/joy/IconButton";
-import Typography from "@mui/joy/Typography";
-import Menu from "@mui/joy/Menu";
-import MenuButton from "@mui/joy/MenuButton";
-import MenuItem from "@mui/joy/MenuItem";
-import Dropdown from "@mui/joy/Dropdown";
+import { Box, Button, Chip, Divider, FormControl, FormLabel, Link, Input, Modal, ModalDialog, ModalClose, Select, Option, Table, Sheet, Checkbox, IconButton, Typography, Menu, MenuButton, MenuItem, Dropdown, iconButtonClasses } from "@mui/joy";
+import { FilterAlt, Search,  ArrowDropDown,  CheckRounded,  Block,  AutorenewRounded,  KeyboardArrowRight,  KeyboardArrowLeft,  MoreHorizRounded } from "@mui/icons-material";
+import { type ColorPaletteProp } from '@mui/joy/styles';
 
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import SearchIcon from "@mui/icons-material/Search";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import BlockIcon from "@mui/icons-material/Block";
-import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
+import { useProdutos } from "../hooks/useProdutos";
 
-const rows = [
-  {
-    id: "1",
-    sku: "INV-1234",
-    nome: "Nike Air Zoom Pegasus 39",
-    descricao:
-      "Tênis de corrida leve e responsivo, ideal para treinos diários e longas distâncias.",
-    date: "Feb 3, 2023",
-    status: "Refunded",
-    categoria: { inicial: "V", nome: "Verão" },
-    marca: { inicial: "N", nome: "Nike" },
-  },
-  {
-    id: "2",
-    sku: "INV-1235",
-    nome: "Adidas VL Court 2.0",
-    descricao:
-      "Tênis casual com visual retrô e confortável, perfeito para o dia a dia urbano.",
-    date: "Mar 12, 2023",
-    status: "Paid",
-    categoria: { inicial: "I", nome: "Inverno" },
-    marca: { inicial: "A", nome: "Adidas" },
-  },
-  {
-    id: "3",
-    sku: "INV-1236",
-    nome: "Mizuno Wave Rider 27",
-    descricao:
-      "Tênis de corrida com excelente amortecimento e estabilidade para alta performance.",
-    date: "Jan 22, 2023",
-    status: "Pending",
-    categoria: { inicial: "O", nome: "Outono" },
-    marca: { inicial: "M", nome: "Mizuno" },
-  },
-  {
-    id: "4",
-    sku: "INV-1237",
-    nome: "Reebok Classic Leather",
-    descricao:
-      "Clássico retrô com cabedal em couro e solado em EVA para conforto e estilo nostálgico.",
-    date: "Apr 15, 2023",
-    status: "Delivered",
-    categoria: { inicial: "P", nome: "Primavera" },
-    marca: { inicial: "R", nome: "Reebok" },
-  },
-  {
-    id: "5",
-    sku: "INV-1238",
-    nome: "New Balance 574 Core",
-    descricao:
-      "Tênis urbano com pegada esportiva, ideal para looks casuais com um toque retrô.",
-    date: "May 8, 2023",
-    status: "Refunded",
-    categoria: { inicial: "V", nome: "Verão" },
-    marca: { inicial: "N", nome: "New Balance" },
-  },
-  {
-    id: "6",
-    sku: "INV-1239",
-    nome: "Fila Axilus Energized",
-    descricao:
-      "Modelo para treinos indoor, com solado emborrachado e boa ventilação.",
-    date: "Jun 18, 2023",
-    status: "Shipped",
-    categoria: { inicial: "I", nome: "Inverno" },
-    marca: { inicial: "F", nome: "Fila" },
-  },
-  {
-    id: "7",
-    sku: "INV-1240",
-    nome: "Converse Chuck Taylor All Star High",
-    descricao:
-      "O clássico cano alto em lona, símbolo de autenticidade e estilo atemporal.",
-    date: "Jul 4, 2023",
-    status: "Paid",
-    categoria: { inicial: "P", nome: "Primavera" },
-    marca: { inicial: "C", nome: "Converse" },
-  },
-  {
-    id: "8",
-    sku: "INV-1241",
-    nome: "Asics Gel-Nimbus 25",
-    descricao:
-      "Tênis extremamente leve com tecnologia de amortecimento em gel, ideal para longas corridas.",
-    date: "Aug 1, 2023",
-    status: "Pending",
-    categoria: { inicial: "O", nome: "Outono" },
-    marca: { inicial: "A", nome: "Asics" },
-  },
-  {
-    id: "9",
-    sku: "INV-1242",
-    nome: "Under Armour HOVR Phantom 3",
-    descricao:
-      "Tênis impermeável com conforto térmico, ideal para treinos em dias frios e úmidos.",
-    date: "Sep 10, 2023",
-    status: "Delivered",
-    categoria: { inicial: "I", nome: "Inverno" },
-    marca: { inicial: "U", nome: "Under Armour" },
-  },
-  {
-    id: "10",
-    sku: "INV-1243",
-    nome: "Lacoste Gripshot",
-    descricao:
-      "Tênis casual com design clean e cabedal em couro, perfeito para dias de verão.",
-    date: "Oct 5, 2023",
-    status: "Refunded",
-    categoria: { inicial: "V", nome: "Verão" },
-    marca: { inicial: "L", nome: "Lacoste" },
-  },
-  {
-    id: "11",
-    sku: "INV-1244",
-    nome: "Diesel S-Astico Mid Lace",
-    descricao: "Tênis retrô dos anos 90 com acabamento moderno e sola robusta.",
-    date: "Nov 15, 2023",
-    status: "Shipped",
-    categoria: { inicial: "P", nome: "Primavera" },
-    marca: { inicial: "D", nome: "Diesel" },
-  },
-  {
-    id: "12",
-    sku: "INV-1245",
-    nome: "Balenciaga Triple S",
-    descricao:
-      "Tênis chunky de luxo com design marcante, referência no streetwear internacional.",
-    date: "Dec 25, 2023",
-    status: "Paid",
-    categoria: { inicial: "O", nome: "Outono" },
-    marca: { inicial: "B", nome: "Balenciaga" },
-  },
-  {
-    id: "13",
-    sku: "INV-1246",
-    nome: "Supra Vaider",
-    descricao:
-      "Tênis moderno e urbano, com cano médio e visual arrojado para skaters e streetwear.",
-    date: "Jan 5, 2024",
-    status: "Pending",
-    categoria: { inicial: "I", nome: "Inverno" },
-    marca: { inicial: "S", nome: "Supra" },
-  },
-  {
-    id: "14",
-    sku: "INV-1247",
-    nome: "Havaianas TNS Clean",
-    descricao:
-      "Tênis casual leve com sola de borracha reciclada, ideal para dias quentes.",
-    date: "Feb 14, 2024",
-    status: "Delivered",
-    categoria: { inicial: "P", nome: "Primavera" },
-    marca: { inicial: "H", nome: "Havaianas" },
-  },
-  {
-    id: "15",
-    sku: "INV-1248",
-    nome: "Zara Minimal Runner",
-    descricao:
-      "Tênis com visual minimalista e sola discreta, combina com looks clean e modernos.",
-    date: "Mar 20, 2024",
-    status: "Shipped",
-    categoria: { inicial: "O", nome: "Outono" },
-    marca: { inicial: "Z", nome: "Zara" },
-  },
-  {
-    id: "16",
-    sku: "INV-1249",
-    nome: "Timberland Trail Trekker",
-    descricao:
-      "Tênis de trilha robusto com sola tratorada e cabedal resistente à água.",
-    date: "Apr 2, 2024",
-    status: "Refunded",
-    categoria: { inicial: "V", nome: "Verão" },
-    marca: { inicial: "T", nome: "Timberland" },
-  },
-  {
-    id: "17",
-    sku: "INV-1250",
-    nome: "Olympikus Veloz",
-    descricao:
-      "Modelo branco, versátil e leve, ótimo para treinos funcionais ou uso casual.",
-    date: "May 11, 2024",
-    status: "Paid",
-    categoria: { inicial: "I", nome: "Inverno" },
-    marca: { inicial: "O", nome: "Olympikus" },
-  },
-  {
-    id: "18",
-    sku: "INV-1251",
-    nome: "Kappa Running Lite",
-    descricao:
-      "Tênis esportivo superleve com cabedal respirável e solado ergonômico.",
-    date: "Jun 9, 2024",
-    status: "Pending",
-    categoria: { inicial: "O", nome: "Outono" },
-    marca: { inicial: "K", nome: "Kappa" },
-  },
-  {
-    id: "19",
-    sku: "INV-1252",
-    nome: "Lost Skater High",
-    descricao:
-      "Tênis cano alto com solado reforçado e design voltado ao público jovem e urbano.",
-    date: "Jul 7, 2024",
-    status: "Delivered",
-    categoria: { inicial: "P", nome: "Primavera" },
-    marca: { inicial: "L", nome: "Lost" },
-  },
-  {
-    id: "20",
-    sku: "INV-1253",
-    nome: "Skechers Go Run Max",
-    descricao:
-      "Tênis respirável com espuma leve, ideal para caminhadas e corridas leves no verão.",
-    date: "Aug 3, 2024",
-    status: "Shipped",
-    categoria: { inicial: "V", nome: "Verão" },
-    marca: { inicial: "S", nome: "Skechers" },
-  },
-];
+type Ordem = "asc" | "desc";
 
-type Order = "asc" | "desc";
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key
+function getComparator<Key extends string>(
+  ordem: Ordem,
+  ordenarPor: Key
 ): (
   a: { [key in Key]: number | string },
   b: { [key in Key]: number | string }
 ) => number {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+  return ordem === "desc"
+    ? (a, b) => descendingComparator(a, b, ordenarPor)
+    : (a, b) => -descendingComparator(a, b, ordenarPor);
 }
 
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
+function descendingComparator<T>(a: T, b: T, ordenarPor: keyof T) {
+  if (b[ordenarPor] < a[ordenarPor]) {
     return -1;
   }
-  if (b[orderBy] > a[orderBy]) {
+  if (b[ordenarPor] > a[ordenarPor]) {
     return 1;
   }
   return 0;
@@ -286,7 +37,7 @@ function RowMenu() {
         slots={{ root: IconButton }}
         slotProps={{ root: { variant: "plain", color: "neutral", size: "sm" } }}
       >
-        <MoreHorizRoundedIcon />
+        <MoreHorizRounded />
       </MenuButton>
       <Menu size="sm" sx={{ minWidth: 140 }}>
         <MenuItem>Editar</MenuItem>
@@ -297,20 +48,46 @@ function RowMenu() {
   );
 }
 
+type Status = "Paid" | "Refunded" | "Cancelled";
+
+interface ProdutoRow {
+  id: string; 
+  nome: string;
+  status: Status;
+}
+
+const statusDecorators: Record<Status, React.ReactNode> = {
+Paid: <CheckRounded />,
+Refunded: <AutorenewRounded />,
+Cancelled: <Block />
+};
+
+const statusColors: Record<Status, ColorPaletteProp> = {
+Paid: "success",
+Refunded: "neutral",
+Cancelled: "danger"
+};
+
 export default function OrderTable() {
-  const [order, setOrder] = React.useState<Order>("desc");
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
-  const [open, setOpen] = React.useState(false);
-
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const rowsPerPage = 5;
-
-  const paginatedRows = rows.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
-
-  const totalPages = Math.ceil(rows.length / rowsPerPage);
+  const { data: produto = [], isLoading } = useProdutos();
+  
+    console.log("Produto:", produto);
+    console.table(produto);
+    console.log(typeof produto);
+    const rows = produto || []; 
+  
+    const [ordem, setOrdem] = React.useState<Ordem>("desc");
+    const [selected, setSelected] = React.useState<readonly string[]>([]);
+    const [open, setOpen] = React.useState(false);
+  
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const rowsPerPage = 5;
+  
+    const paginatedRows = rows.length > 0 
+      ? rows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+    : [];
+  
+    const totalPages = Math.max(Math.ceil(rows.length / rowsPerPage), 1); 
 
   const getPagination = () => {
     const pages = [];
@@ -372,6 +149,9 @@ export default function OrderTable() {
     </React.Fragment>
   );
 
+  if (isLoading) {
+    return <Typography>Loading...</Typography>;
+  }
   return (
     <React.Fragment>
       <Sheet
@@ -381,7 +161,7 @@ export default function OrderTable() {
         <Input
           size="sm"
           placeholder="Filtrar por nome"
-          startDecorator={<SearchIcon />}
+          startDecorator={<Search />}
           sx={{ flexGrow: 1 }}
         />
         <IconButton
@@ -390,7 +170,7 @@ export default function OrderTable() {
           color="neutral"
           onClick={() => setOpen(true)}
         >
-          <FilterAltIcon />
+          <FilterAlt />
         </IconButton>
         <Modal open={open} onClose={() => setOpen(false)}>
           <ModalDialog aria-labelledby="filter-modal" layout="fullscreen">
@@ -426,7 +206,7 @@ export default function OrderTable() {
           <Input
             size="sm"
             placeholder="Filtrar por nome"
-            startDecorator={<SearchIcon />}
+            startDecorator={<Search />}
           />
         </FormControl>
         {renderFilters()}
@@ -471,7 +251,7 @@ export default function OrderTable() {
                   onChange={(event) => {
                     setSelected(
                       event.target.checked
-                        ? paginatedRows.map((row) => row.id)
+                        ? paginatedRows.map((row: ProdutoRow) => row.id)
                         : []
                     );
                   }}
@@ -488,18 +268,18 @@ export default function OrderTable() {
                   underline="none"
                   color="primary"
                   component="button"
-                  onClick={() => setOrder(order === "asc" ? "desc" : "asc")}
-                  endDecorator={<ArrowDropDownIcon />}
+                  onClick={() => setOrdem(ordem === "asc" ? "desc" : "asc")}
+                  endDecorator={<ArrowDropDown />}
                   sx={[
                     {
                       fontWeight: "lg",
                       "& svg": {
                         transition: "0.2s",
                         transform:
-                          order === "desc" ? "rotate(0deg)" : "rotate(180deg)",
+                          ordem === "desc" ? "rotate(0deg)" : "rotate(180deg)",
                       },
                     },
-                    order === "desc"
+                    ordem === "desc"
                       ? { "& svg": { transform: "rotate(0deg)" } }
                       : { "& svg": { transform: "rotate(180deg)" } },
                   ]}
@@ -515,7 +295,7 @@ export default function OrderTable() {
             </tr>
           </thead>
           <tbody>
-            {[...paginatedRows].sort(getComparator(order, "id")).map((row) => (
+            {[...paginatedRows].sort(getComparator(ordem, "id")).map((row) => (
               <tr key={row.id}>
                 <td style={{ textAlign: "center", width: 120 }}>
                   <Checkbox
@@ -545,29 +325,17 @@ export default function OrderTable() {
                   <Chip
                     variant="soft"
                     size="sm"
-                    startDecorator={
-                      {
-                        Paid: <CheckRoundedIcon />,
-                        Refunded: <AutorenewRoundedIcon />,
-                        Cancelled: <BlockIcon />,
-                      }[row.status]
-                    }
-                    color={
-                      {
-                        Paid: "success",
-                        Refunded: "neutral",
-                        Cancelled: "danger",
-                      }[row.status] as ColorPaletteProp
-                    }
+                    startDecorator={statusDecorators[row.status as Status]}
+                    color={statusColors[row.status as Status]}
                   >
                     {row.status}
                   </Chip>
                 </td>
                 <td>
                   <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                    <Avatar size="sm">{row.marca.inicial}</Avatar>
+                    {/* <Avatar size="sm">{row.marca.inicial}</Avatar> */}
                     <div>
-                      <Typography level="body-xs">{row.marca.nome}</Typography>
+                      <Typography level="body-xs">{row.marca?.nome ?? "—"}</Typography>
                       {/* <Typography level="body-xs">
                         {row.categoria.email}
                       </Typography> */}
@@ -576,11 +344,9 @@ export default function OrderTable() {
                 </td>
                 <td>
                   <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                    <Avatar size="sm">{row.categoria.inicial}</Avatar>
+                    {/* <Avatar size="sm">{row.categoria.inicial}</Avatar> */}
                     <div>
-                      <Typography level="body-xs">
-                        {row.categoria.nome}
-                      </Typography>
+                      <Typography level="body-xs">{row.categoria?.nome ?? "—"}</Typography>
                       {/* <Typography level="body-xs">
                         {row.categoria.email}
                       </Typography> */}
@@ -618,7 +384,7 @@ export default function OrderTable() {
           color="neutral"
           disabled={currentPage === 1}
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          startDecorator={<KeyboardArrowLeftIcon />}
+          startDecorator={<KeyboardArrowLeft />}
         >
           Anterior
         </Button>
@@ -655,7 +421,7 @@ export default function OrderTable() {
           onClick={() =>
             setCurrentPage((prev) => Math.min(prev + 1, totalPages))
           }
-          endDecorator={<KeyboardArrowRightIcon />}
+          endDecorator={<KeyboardArrowRight />}
         >
           Próximo
         </Button>

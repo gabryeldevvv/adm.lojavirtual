@@ -239,7 +239,15 @@ export default function RegistroCategoria() {
 
             <FormControl>
               <FormLabel>Categoria Pai</FormLabel>
-              <SeletorRegistro onSelect={(idPai) => setValue('idPai', idPai)} />
+              <SeletorRegistro
+                value={
+                  data?.idPai && data?.nomePai
+                    ? { id: data.idPai, nome: data.nomePai }
+                    : null
+                }
+                onSelect={(categoria) => setValue("idPai", categoria?.id || null)}
+                objeto="categorias"
+              />
             </FormControl>
           </Stack>
 
